@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+      - name: fastapi
+        image: dogukant/fastapi # Docker Hub'daki image
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql+psycopg://postgres:02021997a@postgres/productmanagement"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+spec:
+  type: NodePort # Dış dünyaya açılacak
+  selector:
+    app: fastapi
+  ports:
+    - port: 80
+      targetPort: 8000
+      nodePort: 30001 # Minikube için sabit port

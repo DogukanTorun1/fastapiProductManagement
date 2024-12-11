@@ -54,3 +54,16 @@ class ProductResponse(ProductBase):
 
     class Config:
         form_attributes = True
+
+# product types schema
+
+class ProductTypeBase(BaseModel):
+    type_name: str
+
+class ProductTypeCreate(ProductTypeBase):
+    type_name: str
+
+class ProductTypeResponse(ProductTypeBase):
+    id: int
+    class Config:
+        form_attributes = True

@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 02021997a
+      POSTGRES_DB: productmanagement
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  fastapi:
+    build:
+      context: . 
+    container_name: fastapi_container
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres:02021997a@postgres/productmanagement
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    restart: always
+
+volumes:
+  postgres_data:
