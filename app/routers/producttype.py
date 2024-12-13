@@ -11,7 +11,7 @@ router = APIRouter(
 
 # Create a Product Type
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.ProductTypeResponse)
-def create_product_type(product_type: schemas.ProductTypeCreate, db: Session = Depends(get_db)):
+def create_product_type(product_type: schemas.ProductTypeCreate, db: Session = Depends(get_db), admin_user: models.User = Depends(oauth2.get_admin_user)):
     # Check if product type already exists
     existing_type = db.query(models.ProductType).filter(models.ProductType.type_name == product_type.type_name).first()
     if existing_type:
@@ -25,13 +25,15 @@ def create_product_type(product_type: schemas.ProductTypeCreate, db: Session = D
 
 # Get All Product Types
 @router.get("/", response_model=list[schemas.ProductTypeResponse])
-def get_product_types(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def get_product_types(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), 
+    current_user: schemas.UserResponse = Depends(oauth2.get_current_user)):
     product_types = db.query(models.ProductType).offset(skip).limit(limit).all()
     return product_types
 
 # Get a Single Product Type by ID
 @router.get("/{type_id}", response_model=schemas.ProductTypeResponse)
-def get_product_type(type_id: int, db: Session = Depends(get_db)):
+def get_product_type(type_id: int, db: Session = Depends(get_db), 
+    current_user: schemas.UserResponse = Depends(oauth2.get_current_user)):
     product_type = db.query(models.ProductType).filter(models.ProductType.id == type_id).first()
     if not product_type:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product type not found")
@@ -39,7 +41,7 @@ def get_product_type(type_id: int, db: Session = Depends(get_db)):
 
 # Update a Product Type
 @router.put("/{type_id}", response_model=schemas.ProductTypeResponse)
-def update_product_type(type_id: int, updated_type: schemas.ProductTypeCreate, db: Session = Depends(get_db)):
+def update_product_type(type_id: int, updated_type: schemas.ProductTypeCreate, db: Session = Depends(get_db), admin_user: models.User = Depends(oauth2.get_admin_user)):
     product_type = db.query(models.ProductType).filter(models.ProductType.id == type_id).first()
     if not product_type:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product type not found")
@@ -51,7 +53,7 @@ def update_product_type(type_id: int, updated_type: schemas.ProductTypeCreate, d
 
 # Delete a Product Type
 @router.delete("/{type_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_product_type(type_id: int, db: Session = Depends(get_db)):
+def delete_product_type(type_id: int, db: Session = Depends(get_db), admin_user: models.User = Depends(oauth2.get_admin_user)):
     product_type = db.query(models.ProductType).filter(models.ProductType.id == type_id).first()
     if not product_type:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product type not found")

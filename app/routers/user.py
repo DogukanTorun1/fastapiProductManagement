@@ -28,13 +28,13 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 # Get All Users
 @router.get("/", response_model=list[schemas.UserResponse])
-def get_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def get_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), admin_user: models.User = Depends(oauth2.get_admin_user)):
     users = db.query(models.User).offset(skip).limit(limit).all()
     return users
 
 # Get a Single User by ID
 @router.get("/{user_id}", response_model=schemas.UserResponse)
-def get_user(user_id: int, db: Session = Depends(get_db)):
+def get_user(user_id: int, db: Session = Depends(get_db), admin_user: models.User = Depends(oauth2.get_admin_user)):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -42,7 +42,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 
 # Update a User
 @router.put("/{user_id}", response_model=schemas.UserResponse)
-def update_user(user_id: int, user_update: schemas.UserUpdate, db: Session = Depends(get_db)):
+def update_user(user_id: int, user_update: schemas.UserUpdate, db: Session = Depends(get_db), admin_user: models.User = Depends(oauth2.get_admin_user)):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -55,7 +55,7 @@ def update_user(user_id: int, user_update: schemas.UserUpdate, db: Session = Dep
 
 # Delete a User
 @router.delete("/{user_id}")
-def delete_user(user_id: int, db: Session = Depends(get_db)):
+def delete_user(user_id: int, db: Session = Depends(get_db), admin_user: models.User = Depends(oauth2.get_admin_user)):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

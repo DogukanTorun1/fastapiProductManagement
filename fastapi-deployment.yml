@@ -20,6 +20,13 @@ spec:
         env:
         - name: DATABASE_URL
           value: "postgresql+psycopg://postgres:02021997a@postgres/productmanagement"
+      initContainers: # Alembic migration için init container
+      - name: alembic-migrate
+        image: dogukant/fastapi
+        command: ["alembic", "upgrade", "head"]
+        env:
+        - name: DATABASE_URL
+          value: "postgresql+psycopg://postgres:02021997a@postgres/productmanagement"
 ---
 apiVersion: v1
 kind: Service

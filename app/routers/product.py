@@ -30,7 +30,8 @@ def get_products(skip: int = 0, limit: int = 10, db: Session = Depends(get_db),
 
 # Get a Single Product by ID
 @router.get("/{product_id}", response_model=schemas.ProductResponse)
-def get_product(product_id: int, db: Session = Depends(get_db)):
+def get_product(product_id: int, db: Session = Depends(get_db), 
+    current_user: schemas.UserResponse = Depends(oauth2.get_current_user)):
     product = db.query(models.Product).filter(models.Product.id == product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
@@ -38,7 +39,8 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
 
 # Update a Product
 @router.put("/{product_id}", response_model=schemas.ProductResponse)
-def update_product(product_id: int, product_update: schemas.ProductUpdate, db: Session = Depends(get_db)):
+def update_product(product_id: int, product_update: schemas.ProductUpdate, db: Session = Depends(get_db), 
+    current_user: schemas.UserResponse = Depends(oauth2.get_current_user)):
     product = db.query(models.Product).filter(models.Product.id == product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
@@ -50,7 +52,8 @@ def update_product(product_id: int, product_update: schemas.ProductUpdate, db: S
 
 # Delete a Product
 @router.delete("/{product_id}")
-def delete_product(product_id: int, db: Session = Depends(get_db)):
+def delete_product(product_id: int, db: Session = Depends(get_db), 
+    current_user: schemas.UserResponse = Depends(oauth2.get_current_user)):
     product = db.query(models.Product).filter(models.Product.id == product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")

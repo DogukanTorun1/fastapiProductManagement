@@ -7,8 +7,11 @@ from typing import Optional
 class UserBase(BaseModel):
     full_name: str
     email: EmailStr
+    role: str
 
-class UserCreate(UserBase):
+class UserCreate(BaseModel):
+    full_name: str
+    email: EmailStr
     password: str
 
 class UserUpdate(BaseModel):

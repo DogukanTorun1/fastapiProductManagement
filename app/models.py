@@ -13,6 +13,7 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     is_active = Column(Boolean, server_default="True")
+    role = Column(String, default="user")  # "admin" or "user"
     created_at = Column(TIMESTAMP, nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP, nullable=False, server_default=text("now()"))
 
