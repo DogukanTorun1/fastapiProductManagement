@@ -33,7 +33,7 @@ kind: Service
 metadata:
   name: fastapi-service
 spec:
-  type: NodePort # Dış dünyaya açılacak
+  type: NodePort
   selector:
     app: fastapi
   ports:

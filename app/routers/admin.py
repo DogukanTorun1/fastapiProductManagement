@@ -8,6 +8,8 @@ router = APIRouter(
     tags=["Admin"],
 )
 
+####################### SADECE ADMIN EKLEMEK İÇİN BIR KERE KULLANILACAK ROUTE #######################
+
 @router.post("/create-admin", status_code=status.HTTP_201_CREATED)
 def create_admin_user(db: Session = Depends(get_db)):
     # Check if an admin already exists
@@ -16,7 +18,7 @@ def create_admin_user(db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Admin user already exists")
 
     # Create the admin user
-    hashed_password = utils.hash("admin")  # Replace this with a more secure password if needed
+    hashed_password = utils.hash("admin") 
     admin_user = models.User(
         full_name="admin",
         email="admin@admin.com",
