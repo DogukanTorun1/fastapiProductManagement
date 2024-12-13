@@ -50,6 +50,7 @@ minikube service fastapi-service
 
 # File Structure
 
+```
 project-management-backend/
 │
 ├── app/
@@ -82,4 +83,4 @@ project-management-backend/
 ├── postgres_deployment.yml # Kubernetes deployment for PostgreSQL
 ├── fastapi_deployment.yml  # Kubernetes deployment for FastAPI
 └── README.md                # Project documentation
-
+```
