@@ -59,6 +59,10 @@ def delete_user(user_id: int, db: Session = Depends(get_db), admin_user: models.
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    if user.role == "admin":
+        raise HTTPException(
+            status_code=400, detail="Cannot delete a user with admin role"
+        )
     db.delete(user)
     db.commit()
     return {"message": "User deleted successfully"}
