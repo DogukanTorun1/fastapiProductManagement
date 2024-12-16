@@ -26,6 +26,6 @@ app.include_router(admin.router)
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World Actions Deneme 2"}
+    return {"Hello": "World Actions Deneme 3"}
 
 
